@@ -38,9 +38,11 @@ namespace FileShareApp.Controllers
 
             try
             {
-                string? userIdStr = User.FindFirst("UserId")?.Value;
-                if (userIdStr == null) return Unauthorized();
-                int userId = int.Parse(userIdStr);
+                //string? userIdStr = User.FindFirst("UserId")?.Value;
+                //if (userIdStr == null) return Unauthorized();
+                //int userId = int.Parse(userIdStr);
+
+                int userId = 1;
 
                 string? boundary = MultipartRequestHelper.GetBoundary(MediaTypeHeaderValue.Parse(Request.ContentType), _defaultFormOptions.MultipartBoundaryLengthLimit);
                 MultipartReader? reader = new MultipartReader(boundary, Request.Body);
@@ -102,14 +104,16 @@ namespace FileShareApp.Controllers
 
         public async Task<IActionResult> Index()
         {
-            string? userIdStr = User.FindFirst("UserId")?.Value;
+            //string? userIdStr = User.FindFirst("UserId")?.Value;
 
-            if (userIdStr == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
+            //if (userIdStr == null)
+            //{
+            //    return RedirectToAction("Login", "Account");
+            //}
 
-            int userId = int.Parse(userIdStr);
+            //int userId = int.Parse(userIdStr);
+
+            int userId = 1;
 
             List<SharedFile>? files = await _context.Files
                 .Where(f => f.UserId == userId)
@@ -122,8 +126,9 @@ namespace FileShareApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
-            string? userIdStr = User.FindFirst("UserId")?.Value;
-            int userId = int.Parse(userIdStr);
+            //string? userIdStr = User.FindFirst("UserId")?.Value;
+            //int userId = int.Parse(userIdStr);
+            int userId = 1;
 
             SharedFile? file = await _context.Files.FirstOrDefaultAsync(f => f.FileId == id && f.UserId == userId);
 
