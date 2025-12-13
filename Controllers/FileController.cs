@@ -99,5 +99,47 @@ namespace FileShareApp.Controllers
                 return Json(new { success = false, message = "Lỗi: " + ex.Message });
             }
         }
+
+        public async Task<IActionResult> Index()
+        {
+            string? userIdStr = User.FindFirst("UserId")?.Value;
+
+            if (userIdStr == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            int userId = int.Parse(userIdStr);
+
+            List<SharedFile>? files = await _context.Files
+                .Where(f => f.UserId == userId)
+                .OrderByDescending(f => f.UploadDate)
+                .ToListAsync();
+
+            return View(files);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            string? userIdStr = User.FindFirst("UserId")?.Value;
+            int userId = int.Parse(userIdStr);
+
+            SharedFile? file = await _context.Files.FirstOrDefaultAsync(f => f.FileId == id && f.UserId == userId);
+
+            if (file != null)
+            {
+                string filePath = Path.Combine(_env.WebRootPath, "uploads", file.StoredFileName);
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+
+                _context.Files.Remove(file);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
