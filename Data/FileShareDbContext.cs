@@ -22,6 +22,17 @@ namespace FileShareApp.Data
             modelBuilder
                 .UseCollation("utf8mb4_unicode_ci")
                 .HasCharSet("utf8mb4");
+
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.HasKey(e => e.UserId).HasName("PRIMARY");
+
+                entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            });
+
+            OnModelCreatingPartial(modelBuilder);
         }
+
+        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }
