@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Xml.Linq;
 
 namespace FileShareApp.Models
 {
@@ -24,7 +23,7 @@ namespace FileShareApp.Models
 
         [Column(TypeName = "datetime")]
         public DateTime? CreatedAt { get; set; }
-
+        
         [InverseProperty("User")]
         public virtual ICollection<SharedFile> Files { get; set; } = new List<SharedFile>();
     }
